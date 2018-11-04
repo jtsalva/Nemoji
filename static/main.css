@@ -1,0 +1,54 @@
+body {
+    min-width: 776px;
+}
+
+#title {
+    text-align: center;
+    font-weight: bold;
+}
+
+#title #head {
+    font-size: 0.70em;
+    font-weight: normal;
+}
+
+#title #end {
+    color: #e65100;
+}
+
+.recording {
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+    min-width: 365px;
+}
+
+#my-number {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.sentiment-emoji {
+    font-size: 0.8em;
+}
+
+.date:hover {
+    cursor: default !important;
+}
+
+.close {
+    background-color: #FFCC4D;
+    border-radius: 5px;
+}
+
+#header {
+    padding-top: 40px;
+    margin-top: -45px;
+    background-color: #BCBC;
+    padding-bottom: 20px;
+}
+
+.row {
+    margin-top: 15px;
+}
