@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<link rel="shortcut icon" type="image/png" href="/s/favicon.ico"/>
+<title>Nemoji</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+<style>
+    body {
+        min-width: 776px;
+    }
+ 
+    #title {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    #title #head {
+        font-size: 0.70em;
+        font-weight: normal;
+    }
+
+    #title #end {
+        color: #e65100;
+    }
+
+    .recording {
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: bold;
+        min-width: 365px;
+    }
+
+    #my-number {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    .sentiment-emoji {
+        font-size: 0.8em;
+    }
+
+    .date:hover {
+        cursor: default !important;
+    }
+
+    .close {
+        background-color: #FFCC4D;
+        border-radius: 5px;
+    }
+
+    #header {
+        padding-top: 40px;
+        margin-top: -45px;
+        background-color: #BCBC;
+        padding-bottom: 20px;
+    }
+
+    .row {
+        margin-top: 15px;
+    }
+</style>
+</head>
+<body>
+    <div id="header">
+    <h1 id="title">nemo<span id="end">ji</span> <span id="head">Call Logs</span></h1>
+    <p id="my-number">+44 7418 340343</p>
+    </div>
+    <div class="row">
+    {% for log in reversed(logs) %}
+        <div class="col s12 m6 l4">
+        <div class="recording card" data-name="{{ log[3] }}" data-sentiment="{{ log[4] }}">
+            <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">+44{{ log[1] }}
+<i class="sentiment-emoji em right"></i></span>
+            </div>
+
+            <div class="card-reveal" style="display: none; transform: translateY(0%);">
+                <span class="card-title grey-text text-darken-4">Transcription<i class="close material-icons right">close</i></span>
+                <p>"{{ log[2] }}"</p>                 
+           </div>
+           <div class="card-action">
+                <a href="/s/{{ log[3] }}.wav">DOWNLOAD</a>
+                <a href="#" style="float: right; color: #1976d2;" class="date">{{ ' '.join(log[3].replace('-', '/').split('_')[::-1])  }}</a>
+            </div>
+        </div>
+        </div>
+    {% end %}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="text/javascript">
+        let very_negative = 'deep-orange';
+        let negative = 'orange';
+        let neutral = 'yellow';
+        let positive = 'lime';
+        let very_positive = 'green darken-3';
+
+        let evneg = 'em-angry';
+        let eneg = 'em-anguished';
+        let enet = 'em-neutral_face';
+        let epos = 'em-smiley';
+        let evpos = 'em-laughing';        
+
+        $(document).ready(function() {
+           $('.recording').each(function(){
+               let sentiment = $(this).attr('data-sentiment');
+               let card = $(this).children('.card-reveal');
+               let emoji = $(this).find('i.right');
+               if (sentiment <= -0.75) {
+                    card.addClass(very_negative);
+                    emoji.addClass(evneg);
+                } else if (sentiment > -0.75 && sentiment < -0.25) {
+                    card.addClass(negative);
+                    emoji.addClass(eneg);
+                } else if (sentiment >= -0.25 && sentiment <= 0.25) {
+                    card.addClass(neutral);
+                    emoji.addClass(enet);
+                } else if (sentiment > 0.25 && sentiment < 0.75) {
+                    card.addClass(positive);
+                     emoji.addClass(epos);
+                } else {
+                    card.addClass(very_positive);
+                    emoji.addClass(evpos);
+               }
+           });
+        });
+    </script>
+</body>
+</html>

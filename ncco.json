@@ -1,0 +1,21 @@
+[    
+     {
+       "action": "talk",
+       "voiceName": "Amy",
+       "text":"Hello stranger, tell me something"
+     },  
+     {
+       "action": "connect",
+       "eventUrl": ["http://$hostname/event"],
+       "from":"44741834043",
+       "endpoint": [
+           {
+              "type": "websocket",
+              "uri" : "ws://$hostname/socket",
+              "content-type": "audio/l16;rate=16000", 
+              "headers": {
+              }
+           }
+       ]
+     }
+]
