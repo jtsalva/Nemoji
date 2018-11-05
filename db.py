@@ -3,6 +3,8 @@ import bull
 DATABASE_NAME = 'a'
 LOG_TABLE = 'log'
 
+bull.Database.connect(DATABASE_NAME).execute('CREATE TABLE IF NOT EXISTS log(id INT PRIMARY KEY, number CHAR(10), transcription TEXT, datetime TEXT, sentiment, DECIMAL)')
+
 def new_log(caller, transcription, datetime, sentiment):
     db = bull.Database.connect(DATABASE_NAME)
 
