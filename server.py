@@ -19,16 +19,8 @@ from sentiment import analyze_sentiment
 
 HOSTNAME = 'htm.jtsalva.space'
 
-current = {
-    'caller': None,
-    'transcription': None,
-    'datetime': None
-}
-
-def convert():
-    t = time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(time.time()))
-    current['datetime'] = t
-    f = wave.open('static/{}.wav'.format(t), 'wb')
+def convert(datetime):
+    f = wave.open('static/{}.wav'.format(datetime), 'wb')
     f.setnchannels(1)
     f.setsampwidth(2)
     f.setframerate(16000)
@@ -67,6 +59,7 @@ class CallHandler(tornado.web.RequestHandler):
     def get(self):
         data={}
         data['hostname'] = HOSTNAME
+        data['origin'] = self.get_query_argument('from')
         filein = open('ncco.json')
         src = Template(filein.read())
         filein.close()
@@ -79,8 +72,6 @@ class CallHandler(tornado.web.RequestHandler):
 class EventHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def post(self):
-        print(str(self.request.body))
-        current['caller'] = json.loads(self.request.body.decode('utf-8'))['from']
         self.content_type = 'text/plain'
         self.write('ok')
         self.finish()
@@ -98,15 +89,19 @@ class WSHandler(tornado.websocket.WebSocketHandler):
         if type(message) != str:
             self.buffer += message
         else:
+            message = json.loads(message)
+            if message['event'] == 'websocket:connected':
+                self.origin = message['origin']
             print(message)
     def on_close(self):
         print("Websocket Call Disconnected")
         with open('static/audio.raw', 'wb') as f:
             f.write(self.buffer)
-        convert()
         timestamps(self.ts)
-        transcription = transcribe(current['datetime'])
-        new_log(current['caller'], transcription, current['datetime'], analyze_sentiment(transcription))
+        datetime = time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(time.time()))
+        convert(datetime)
+        transcription = transcribe(datetime)
+        new_log(self.origin, transcription, datetime, analyze_sentiment(transcription))
 
 
 def main():
