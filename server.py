@@ -18,6 +18,7 @@ from transcribe import transcribe
 from sentiment import analyze_sentiment
 
 HOSTNAME = 'htm.jtsalva.space'
+NEXMO_NUMBER = '447418340343'
 
 def convert(datetime):
     f = wave.open('static/{}.wav'.format(datetime), 'wb')
@@ -50,7 +51,7 @@ class MainHandler(tornado.web.RequestHandler):
         t = template.Template(file)
 
         self.content_type = 'text/html'
-        self.write(t.generate(logs=logs))
+        self.write(t.generate(logs=logs, my_number=NEXMO_NUMBER))
         self.finish()
 
 		
@@ -60,6 +61,7 @@ class CallHandler(tornado.web.RequestHandler):
         data={}
         data['hostname'] = HOSTNAME
         data['origin'] = self.get_query_argument('from')
+        data['nexmo_number'] = NEXMO_NUMBER
         filein = open('ncco.json')
         src = Template(filein.read())
         filein.close()
@@ -119,6 +121,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-	
-	
-
